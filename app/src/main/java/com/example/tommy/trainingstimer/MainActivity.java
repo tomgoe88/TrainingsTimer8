@@ -1,11 +1,13 @@
 package com.example.tommy.trainingstimer;
 
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 import android.view.View;
@@ -33,9 +35,16 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        FragmentTransaction fT= getSupportFragmentManager().beginTransaction();
-        fT.add(R.id.pagerFragment,new FragmentPager());
-        fT.commit();
+        FragmentNewTimer newTimer= (FragmentNewTimer)getSupportFragmentManager().findFragmentByTag("NEWTIMER");
+
+
+        if(newTimer==null){
+            FragmentTransaction fT= getSupportFragmentManager().beginTransaction();
+            fT.add(R.id.pagerFragment,new FragmentPager());
+            fT.addToBackStack("Pager");
+            fT.commit();
+        }
+
 
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -88,18 +97,14 @@ public class MainActivity extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.nav_camera) {
+        if (id == R.id.neuerTimer) {
+            FragmentTransaction ft= getSupportFragmentManager().beginTransaction();
+            ft.replace(R.id.pagerFragment,new FragmentNewTimer(),"NEWTIMER");
+
+            ft.addToBackStack("NEWTIMER");
+            ft.commit();
 
 
-        } else if (id == R.id.nav_gallery) {
-
-        } else if (id == R.id.nav_slideshow) {
-
-        } else if (id == R.id.nav_manage) {
-
-        } else if (id == R.id.nav_share) {
-
-        } else if (id == R.id.nav_send) {
 
         }
 
@@ -112,4 +117,16 @@ public class MainActivity extends AppCompatActivity
     public void onFragmentInteraction(Uri uri) {
 
     }
+    @Override
+    public String toString() {
+        return "MainActivity";
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+
+    }
+
+
 }

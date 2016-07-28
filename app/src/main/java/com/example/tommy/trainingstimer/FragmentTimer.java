@@ -3,11 +3,16 @@ package com.example.tommy.trainingstimer;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.ListView;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 
@@ -21,7 +26,13 @@ public class FragmentTimer extends Fragment {
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
+    LinkedList<Timer> timers;
 
+
+
+    ListView listView;
+    Thread newThread;
+    AdapterTimerView adapterTimerView;
 
     // TODO: Rename and change types of parameters
     private String mParam1;
@@ -30,6 +41,10 @@ public class FragmentTimer extends Fragment {
 
     public FragmentTimer() {
         // Required empty public constructor
+    }
+
+    public FragmentTimer(LinkedList<Timer> timers) {
+        this.timers = timers;
     }
 
     /**
@@ -53,10 +68,28 @@ public class FragmentTimer extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+       if(savedInstanceState!=null){
+
+            timers=(LinkedList<Timer>)savedInstanceState.getSerializable("LIST_TIMER");
+            Log.v("After", "Liste hat: "+ timers.size());
+           adapterTimerView=new AdapterTimerView(getContext(),timers);
+        }
+        else {
+
+           adapterTimerView = new AdapterTimerView(getContext(), timers);
+       }
         if (getArguments() != null) {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+/*        timers= new LinkedList<Timer>();
+        timers.add(new Timer(2000));
+        timers.add(new Timer(2000));
+        timers.add(new Timer(2000));
+        timers.add(new Timer(2000));
+        timers.add(new Timer(5000));*/
+
+
 
     }
 
@@ -64,7 +97,68 @@ public class FragmentTimer extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_fragment_timer, container, false);
+        View v= inflater.inflate(R.layout.fragment_fragment_timer, container, false);
+        listView=(ListView)v.findViewById(R.id.timerList);
+        Button startTimer=(Button)v.findViewById(R.id.startTimer);
+
+        startTimer.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                        Runnable newRun= new Runnable() {
+                            @Override
+                            public void run() {
+                                adapterTimerView.startTimer(getActivity());
+                                Log.v("Thread","gestartet"+getContext().toString());
+                                getActivity().runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        uiThread();
+                                    }
+                                });
+/*                      FragmentTransaction fT= getActivity().getSupportFragmentManager().beginTransaction();
+                        fT.replace(R.id.pagerFragment,new FragmentPager());
+                        fT.commit();*/
+                            }
+                        };
+                Thread newThread= new Thread(newRun);
+                newThread.start();
+
+
+
+
+                    }
+
+
+
+        });
+        listView.setAdapter(adapterTimerView);
+        return v;
+    }
+    public void uiThread(){
+        listView.setAdapter(null);
+        adapterTimerView= new AdapterTimerView(getActivity(),timers);
+        adapterTimerView.notifyDataSetChanged();
+        listView.setAdapter(adapterTimerView);
+
+
+    }
+    public LinkedList<Timer> getTimers() {
+        return timers;
     }
 
+    public void setTimers(LinkedList<Timer> timers) {
+        this.timers = timers;
+    }
+
+    @Override
+    public String toString() {
+        return "FragmentTimer";
+    }
+
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putSerializable("LIST_TIMER", timers);
+    }
 }

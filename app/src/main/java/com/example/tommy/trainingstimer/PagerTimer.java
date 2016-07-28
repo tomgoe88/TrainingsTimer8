@@ -17,7 +17,7 @@ import java.util.List;
  */
 public class PagerTimer extends FragmentPagerAdapter {
     private String[] titles;
-    public  List<Fragment> fragments = new ArrayList<Fragment>();
+    public  List<Fragment> fragments;
     int fcount;
     FragmentManager fMM;
 
