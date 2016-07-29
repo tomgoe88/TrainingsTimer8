@@ -1,14 +1,19 @@
 package com.example.tommy.trainingstimer;
 
 
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.AlertDialog;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.NumberPicker;
 
 import java.util.LinkedList;
 
@@ -24,6 +29,8 @@ public class FragmentNewTimer extends Fragment {
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
     LinkedList<Timer> timers;
+
+
 
     // TODO: Rename and change types of parameters
     private String mParam1;
@@ -78,6 +85,7 @@ public class FragmentNewTimer extends Fragment {
         View v= inflater.inflate(R.layout.fragment_fragment_new_timer, container, false);
         final ListView newTimerList= (ListView)v.findViewById(R.id.newTimerList);
         Button save= (Button)v.findViewById(R.id.saveList);
+
         final AdapterNewTimer newAdapter=new AdapterNewTimer(getActivity(),timers );
         save.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -101,6 +109,8 @@ public class FragmentNewTimer extends Fragment {
             }
         });
         newTimerList.setAdapter(newAdapter);
+
+
         return v;
     }
 

@@ -1,8 +1,12 @@
 package com.example.tommy.trainingstimer;
 
+import android.app.Activity;
+import android.app.TimePickerDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.os.CountDownTimer;
 import android.support.design.widget.TabLayout;
+import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,11 +17,14 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.NumberPicker;
 import android.widget.ProgressBar;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
+import android.widget.TimePicker;
 
+import java.util.Calendar;
 import java.util.LinkedList;
 import java.util.concurrent.TimeUnit;
 
@@ -27,16 +34,19 @@ import java.util.concurrent.TimeUnit;
 public class AdapterNewTimer extends BaseAdapter {
     private LinkedList<Timer> uebung;
     private LinkedList<Timer> temp;
-    private Context context;
+    private Activity context;
     private TextView timerText;
     private Button plus;
     private Button minus;
     private TextView plusText;
     private View v;
+    View theView;
+    Calendar calendar;
+    AlertDialog.Builder builder;
 
     private int secondss;
     private CountDownTimer countDownTimer;
-    public AdapterNewTimer(Context con, LinkedList<Timer> ueb){
+    public AdapterNewTimer(Activity con, LinkedList<Timer> ueb){
         this.context= con;
         this.uebung=ueb;
     }
@@ -68,6 +78,50 @@ public class AdapterNewTimer extends BaseAdapter {
             viewHolder.btnMinus= (Button)v.findViewById(R.id.minusBUtton);
             viewHolder.btnPlus=(Button)v.findViewById(R.id.plusButton);
             viewHolder.txtSeconds=(TextView)v.findViewById((R.id.secondsText));
+            viewHolder.txtSeconds.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    builder = new AlertDialog.Builder(context);
+                    LayoutInflater inflaters = context.getLayoutInflater();
+                    theView = inflaters.inflate(R.layout.number_picker, null);
+
+                    final NumberPicker unit_euro = (NumberPicker) theView.findViewById(R.id.minute_picker);
+                    final NumberPicker cent = (NumberPicker) theView.findViewById(R.id.second_picker);
+
+
+                    unit_euro.setMinValue(0);
+                    unit_euro.setMaxValue(59);
+
+                    cent.setMinValue(0);
+                    cent.setMaxValue(59);
+                    Log.v("Button", "Item ist clicked");
+                    builder.setView(theView)
+                            .setPositiveButton("",new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    Log.d("DBG","Price is: "+unit_euro.getValue() + "."+cent.getValue());
+                                }
+                            }).setNegativeButton("", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+
+                        }
+                    });
+                    cent.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
+                        @Override
+                        public void onValueChange(NumberPicker numberPicker, int i, int i1) {
+                         //TODO Textview ändern Button einfügen und diesen teoö da einfügen
+                            uebung.get(position).seconds= uebung.get(position).seconds+i1;
+                            Log.v("Wert", "Wert der sekunden ist"+ uebung.get(position).seconds+"+"+i+"+"+i1);
+                            viewHolder.txtSeconds.setText(""+String.format("%d:%02d",
+                                    TimeUnit.MILLISECONDS.toMinutes( uebung.get(position).seconds*1000),
+                                    TimeUnit.MILLISECONDS.toSeconds(uebung.get(position).seconds*1000) -
+                                            TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(uebung.get(position).seconds*1000))));
+                        }
+                    });
+                    builder.show();
+                }
+            });
             viewHolder.txtSeconds.setText(""+String.format("%d:%02d",
                     TimeUnit.MILLISECONDS.toMinutes( uebung.get(position).seconds*1000),
                     TimeUnit.MILLISECONDS.toSeconds(uebung.get(position).seconds*1000) -
@@ -137,6 +191,7 @@ public class AdapterNewTimer extends BaseAdapter {
             }
         }
     }
+
 
 
 
