@@ -27,6 +27,7 @@ public class FragmentTimer extends Fragment {
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
     LinkedList<Timer> timers;
+    LinkedList<Timer> temptimer;
 
 
 
@@ -98,8 +99,12 @@ public class FragmentTimer extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
+        temptimer=new LinkedList<Timer>();
+        for(Timer t:timers){
+            temptimer.add(new Timer(t.seconds,this.getActivity()));
+        }
         setRetainInstance(true);
-        adapterTimerView=new AdapterTimerView(getContext(),timers);
+        adapterTimerView=new AdapterTimerView(getContext(),temptimer);
         View v= inflater.inflate(R.layout.fragment_fragment_timer, container, false);
         listView=(ListView)v.findViewById(R.id.timerList);
         Button startTimer=(Button)v.findViewById(R.id.startTimer);
@@ -139,7 +144,7 @@ public class FragmentTimer extends Fragment {
     }
     public void uiThread(){
         listView.setAdapter(null);
-        adapterTimerView= new AdapterTimerView(getActivity(),timers);
+        adapterTimerView= new AdapterTimerView(getActivity(),temptimer);
         adapterTimerView.notifyDataSetChanged();
         listView.setAdapter(adapterTimerView);
 

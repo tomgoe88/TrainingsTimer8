@@ -37,6 +37,14 @@ public class Timer extends CountDownTimer implements Serializable{
     public Timer(int sec){
         super(sec, 1000);
         this.seconds=sec;
+
+    }
+    public Timer(int sec, Activity con){
+        super(sec, 1000);
+        this.seconds=sec;
+        this.context=con;
+        mediaPlayer= new MediaPlayer();
+        mediaPlayer.create(context, R.raw.piep);
     }
 
     public Timer(String nameUebung, int seconds) {
@@ -47,7 +55,7 @@ public class Timer extends CountDownTimer implements Serializable{
     @Override
     public void onTick(long l) {
         //TODO über diese Klasse muss der sound eingefügt werden
-             //   mediaPlayer.create(MainActivity.class, R.raw.piep);
+
 
 
                 textView.setText(""+String.format("%d:%02d",
@@ -58,17 +66,36 @@ public class Timer extends CountDownTimer implements Serializable{
                 Log.v("Timer seconds","Sind im Timer "+l/1000);
                 int progress = (int) (l/1000);
                     progressBar.setMax(seconds/1000);
-/*        while(l/1000!=0){
-            if (((seconds/1000)-(l/1000))==3){
-                mediaPlayer.start();
+
+            if (l/1000==3) {
+                mediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+                    public void onPrepared(MediaPlayer player) {
+                        player.start();
+                    }
+                });
+                Log.v("Piep", "Piep ist 3");
+                mediaPlayer.reset();
             }
-            if (((seconds/1000)-(l/1000))==2){
-                mediaPlayer.start();
+            if  (l/1000==2){
+                mediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+                    public void onPrepared(MediaPlayer player) {
+                        player.start();
+                    }
+                });
+                Log.v("Piep", "Piep ist 2");
+                mediaPlayer.reset();
             }
-            if (((seconds/1000)-(l/1000))==1){
-                mediaPlayer.start();
+            if (l/1000==1) {
+                mediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+                    public void onPrepared(MediaPlayer player) {
+                        player.start();
+                    }
+                });
+                Log.v("Piep", "Piep ist 1");
+                mediaPlayer.reset();
+                mediaPlayer.release();
             }
-        }*/
+
 
 
 
