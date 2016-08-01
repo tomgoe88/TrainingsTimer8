@@ -23,7 +23,8 @@
             android:layout_height="wrap_content"
             android:text="0"
             android:id="@+id/secondsText"
-            android:layout_gravity="center" />
+            android:layout_gravity="center"
+            android:textSize="70dp" />
 
         <Button
             android:layout_width="70dp"

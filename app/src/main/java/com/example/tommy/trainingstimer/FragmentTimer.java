@@ -71,13 +71,14 @@ public class FragmentTimer extends Fragment {
        if(savedInstanceState!=null){
 
             timers=(LinkedList<Timer>)savedInstanceState.getSerializable("LIST_TIMER");
-            Log.v("After", "Liste hat: "+ timers.size());
-           adapterTimerView=new AdapterTimerView(getContext(),timers);
-        }
-        else {
 
-           adapterTimerView = new AdapterTimerView(getContext(), timers);
-       }
+          // adapterTimerView=new AdapterTimerView(getContext(),timers);
+
+        }
+       // else {
+
+          // adapterTimerView = new AdapterTimerView(getContext(), timers);
+      // }
         if (getArguments() != null) {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
@@ -88,7 +89,7 @@ public class FragmentTimer extends Fragment {
         timers.add(new Timer(2000));
         timers.add(new Timer(2000));
         timers.add(new Timer(5000));*/
-
+        setRetainInstance(true);
 
 
     }
@@ -97,6 +98,8 @@ public class FragmentTimer extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
+        setRetainInstance(true);
+        adapterTimerView=new AdapterTimerView(getContext(),timers);
         View v= inflater.inflate(R.layout.fragment_fragment_timer, container, false);
         listView=(ListView)v.findViewById(R.id.timerList);
         Button startTimer=(Button)v.findViewById(R.id.startTimer);

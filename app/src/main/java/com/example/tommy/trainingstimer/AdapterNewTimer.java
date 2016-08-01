@@ -43,6 +43,7 @@ public class AdapterNewTimer extends BaseAdapter {
     View theView;
     Calendar calendar;
     AlertDialog.Builder builder;
+    Button savepi;
 
     private int secondss;
     private CountDownTimer countDownTimer;
@@ -87,7 +88,7 @@ public class AdapterNewTimer extends BaseAdapter {
 
                     final NumberPicker unit_euro = (NumberPicker) theView.findViewById(R.id.minute_picker);
                     final NumberPicker cent = (NumberPicker) theView.findViewById(R.id.second_picker);
-
+                   // final Button save = (Button) theView.findViewById(R.id.savepick);
 
                     unit_euro.setMinValue(0);
                     unit_euro.setMaxValue(59);
@@ -110,15 +111,39 @@ public class AdapterNewTimer extends BaseAdapter {
                     cent.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
                         @Override
                         public void onValueChange(NumberPicker numberPicker, int i, int i1) {
+                            return;
                          //TODO Textview ändern Button einfügen und diesen teoö da einfügen
-                            uebung.get(position).seconds= uebung.get(position).seconds+i1;
-                            Log.v("Wert", "Wert der sekunden ist"+ uebung.get(position).seconds+"+"+i+"+"+i1);
+
+
+                        }
+                    });
+                    unit_euro.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
+                        @Override
+                        public void onValueChange(NumberPicker numberPicker, int i, int i1) {
+                            return;
+                        }
+                    });
+                    builder.setNeutralButton("Save", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            if(uebung.get(position).seconds!=0){
+                                uebung.get(position).seconds=0;
+                            }
+                            uebung.get(position).seconds= uebung.get(position).seconds+cent.getValue()+(unit_euro.getValue()*60);
+                            Log.v("ButtonClick", "Wert = "+uebung.get(position).seconds);
                             viewHolder.txtSeconds.setText(""+String.format("%d:%02d",
                                     TimeUnit.MILLISECONDS.toMinutes( uebung.get(position).seconds*1000),
                                     TimeUnit.MILLISECONDS.toSeconds(uebung.get(position).seconds*1000) -
                                             TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(uebung.get(position).seconds*1000))));
                         }
                     });
+/*                    save.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+
+
+                        }
+                    });*/
                     builder.show();
                 }
             });
