@@ -71,15 +71,15 @@ public class FragmentTimer extends Fragment {
         super.onCreate(savedInstanceState);
        if(savedInstanceState!=null){
 
-            timers=(LinkedList<Timer>)savedInstanceState.getSerializable("LIST_TIMER");
+            temptimer=(LinkedList<Timer>)savedInstanceState.getSerializable("LIST_TIMER");
 
-          // adapterTimerView=new AdapterTimerView(getContext(),timers);
+           adapterTimerView=new AdapterTimerView(getContext(),temptimer);
 
         }
-       // else {
+        else {
 
-          // adapterTimerView = new AdapterTimerView(getContext(), timers);
-      // }
+           adapterTimerView = new AdapterTimerView(getContext(), timers);
+       }
         if (getArguments() != null) {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
@@ -99,10 +99,11 @@ public class FragmentTimer extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
+        if(temptimer== null ){
         temptimer=new LinkedList<Timer>();
         for(Timer t:timers){
             temptimer.add(new Timer(t.seconds,this.getActivity()));
-        }
+        }}
         setRetainInstance(true);
         adapterTimerView=new AdapterTimerView(getContext(),temptimer);
         View v= inflater.inflate(R.layout.fragment_fragment_timer, container, false);
@@ -167,6 +168,6 @@ public class FragmentTimer extends Fragment {
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putSerializable("LIST_TIMER", timers);
+        outState.putSerializable("LIST_TIMER", temptimer);
     }
 }
