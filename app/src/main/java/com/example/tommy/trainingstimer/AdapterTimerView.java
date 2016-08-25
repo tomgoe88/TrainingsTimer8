@@ -56,7 +56,7 @@ public class AdapterTimerView extends BaseAdapter {
             v = vi.inflate(R.layout.adapter_timer_list, null);
         }
         uebung.get(position).textView= (TextView)v.findViewById(R.id.timerText);
-        uebung.get(position).progressBar=(ProgressBar)v.findViewById((R.id.progressBar));
+        //uebung.get(position).progressBar=(ProgressBar)v.findViewById((R.id.progressBar));
         notifyDataSetChanged();
 
 

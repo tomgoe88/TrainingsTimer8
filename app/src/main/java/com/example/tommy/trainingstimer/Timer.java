@@ -19,7 +19,7 @@ import java.util.concurrent.TimeUnit;
  */
 public class Timer extends CountDownTimer implements Serializable{
     TextView textView;
-    ProgressBar progressBar;
+   // ProgressBar progressBar;
     boolean finish= false;
     private String nameUebung;
     Activity context;
@@ -72,8 +72,8 @@ public class Timer extends CountDownTimer implements Serializable{
                                 TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(l))));
 
                 Log.v("Timer seconds","Sind im Timer "+l/1000);
-                int progress = (int) (l/1000);
-                    progressBar.setMax(seconds/1000);
+              //  int progress = (int) (l/1000);
+                   // progressBar.setMax(seconds/1000);
 //TODO set only one if, and insert a 3 second-wav
 
         if (l/1000==3) {
@@ -184,7 +184,7 @@ public class Timer extends CountDownTimer implements Serializable{
 
 
        // progressBar.getMax()-progress+1
-                progressBar.setProgress(progress);
+              //  progressBar.setProgress(progress);
 
 
 
@@ -195,7 +195,7 @@ public class Timer extends CountDownTimer implements Serializable{
     @Override
     public void onFinish() {
        isFinish();
-        progressBar.setProgress(i);
+      //  progressBar.setProgress(i);
                 textView.setText("Verbleibende Zeit: "+ 0);
 
 

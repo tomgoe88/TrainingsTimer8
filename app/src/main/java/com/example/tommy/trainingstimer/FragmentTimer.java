@@ -1,6 +1,7 @@
 package com.example.tommy.trainingstimer;
 
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -10,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -73,13 +75,13 @@ public class FragmentTimer extends Fragment {
 
             temptimer=(LinkedList<Timer>)savedInstanceState.getSerializable("LIST_TIMER");
 
-           adapterTimerView=new AdapterTimerView(getContext(),temptimer);
+          // adapterTimerView=new AdapterTimerView(getContext(),temptimer);
 
         }
-        else {
+/*        else {
 
-           adapterTimerView = new AdapterTimerView(getContext(), timers);
-       }
+           //adapterTimerView = new AdapterTimerView(getContext(), timers);
+       }*/
         if (getArguments() != null) {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
@@ -104,11 +106,15 @@ public class FragmentTimer extends Fragment {
         for(Timer t:timers){
             temptimer.add(new Timer(t.seconds,this.getActivity()));
         }}
+
         setRetainInstance(true);
-        adapterTimerView=new AdapterTimerView(getContext(),temptimer);
+        //adapterTimerView=new AdapterTimerView(getContext(),temptimer);
         View v= inflater.inflate(R.layout.fragment_fragment_timer, container, false);
         listView=(ListView)v.findViewById(R.id.timerList);
         Button startTimer=(Button)v.findViewById(R.id.startTimer);
+        for(Timer l:temptimer){
+            l.textView=(TextView) v.findViewById(R.id.timerView);
+        }
 
         startTimer.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -116,14 +122,14 @@ public class FragmentTimer extends Fragment {
                         Runnable newRun= new Runnable() {
                             @Override
                             public void run() {
-                                adapterTimerView.startTimer(getActivity());
+                                startTimer(getActivity());
                                 Log.v("Thread","gestartet"+getContext().toString());
-                                getActivity().runOnUiThread(new Runnable() {
+                            /*    getActivity().runOnUiThread(new Runnable() {
                                     @Override
                                     public void run() {
                                         uiThread();
                                     }
-                                });
+                                });*/
 /*                      FragmentTransaction fT= getActivity().getSupportFragmentManager().beginTransaction();
                         fT.replace(R.id.pagerFragment,new FragmentPager());
                         fT.commit();*/
@@ -140,17 +146,17 @@ public class FragmentTimer extends Fragment {
 
 
         });
-        listView.setAdapter(adapterTimerView);
+       // listView.setAdapter(adapterTimerView);
         return v;
     }
-    public void uiThread(){
+/*    public void uiThread(){
         listView.setAdapter(null);
         adapterTimerView= new AdapterTimerView(getActivity(),temptimer);
         adapterTimerView.notifyDataSetChanged();
         listView.setAdapter(adapterTimerView);
 
 
-    }
+    }*/
     public LinkedList<Timer> getTimers() {
         return timers;
     }
@@ -169,5 +175,49 @@ public class FragmentTimer extends Fragment {
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putSerializable("LIST_TIMER", temptimer);
+    }
+    public void startTimer(Activity con){
+
+
+        for(Timer t:temptimer){
+            t.context=con;
+            Log.v("Timer seconds","sind in der Schleife "+t.seconds+" "+t.finish);
+        }
+        int index = temptimer.indexOf(temptimer.getFirst());
+
+
+        temptimer.get(index).start();
+
+
+        //do
+        for(Timer c:temptimer){
+            while (temptimer.get(index).finish != true); {
+
+                if (temptimer.get(index).finish == true) {
+
+                    for(Timer f:temptimer) {
+                        Log.v("Finish", "ist true " + temptimer.get(index).finish);
+                        Log.v("Index", "Index: " + index);
+                        //
+                        if (temptimer.get(index).finish == true&&index!=temptimer.size()-1) {
+                            index++;
+
+                            temptimer.get(index).start();
+
+
+                            Log.v("Timer seconds","sind in der for Schleife "+f.seconds+" "+f.context);
+                        }
+                    }// while (index != uebung.size() - 1);
+                }
+            }
+        }
+        //while (index != uebung.size() -1);
+        Log.v("Fertig", "Schleife fertig");
+        for(Timer r:temptimer){
+            r.finish=false;
+            Log.v("Finish", "Wert wurdde auf:  " + r.finish);
+        }
+
+
     }
 }
